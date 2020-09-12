@@ -46,11 +46,12 @@ class ListPWDViewset(viewsets.ViewSet):
         programmes_result = {}
         for programme_key in programmes:
             axes_result = {}
-            programmes_result[programmes[programme_key]] = axes_result
+            prog_name = f'{programme_key}.{programmes[programme_key]}'
+            programmes_result[prog_name] = axes_result
             for axis in axes:
                 print(axis.get_programme_display())
                 if axis.get_programme_display() == programmes[programme_key]:
-                    programmes_result[programmes[programme_key]].update(
+                    programmes_result[prog_name].update(
                         {str(axis): [str(m) for m in axis.measures.all()]})
 
         return Response(programmes_result)

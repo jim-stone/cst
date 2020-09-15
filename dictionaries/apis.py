@@ -1,27 +1,18 @@
 from rest_framework import (
-    authentication,
-    permissions,
-    viewsets
+    authentication, permissions, viewsets
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import (
-    Axis,
-    Institution,
-    Measure
+    Axis, Measure, Programme, Pwd
 )
 
 from .serializers import (
     AxisSerializer,
     MeasureSerializer,
-    InstitutionSerializer)
-
-from .enumerations import Programme
-
-
-class InstitutionViewset(viewsets.ModelViewSet):
-    queryset = Institution.objects.all()
-    serializer_class = InstitutionSerializer
+    ProgrammeSerializer,
+    PwdSerializer
+)
 
 
 class AxisViewset(viewsets.ModelViewSet):
@@ -34,24 +25,30 @@ class MeasuresViewset(viewsets.ModelViewSet):
     serializer_class = MeasureSerializer
 
 
-class ProgrammeViewset(viewsets.ViewSet):
-    def list(self, request):
-        return Response(Programme.to_dict())
+class ProgrammeViewset(viewsets.ModelViewSet):
+    queryset = Programme.objects.all()
+    serializer_class = ProgrammeSerializer
+
+
+class PwdViewset(viewsets.ReadOnlyModelViewSet):
+    queryset = Pwd.objects.all()
+    serializer_class = PwdSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class ListPWDViewset(viewsets.ViewSet):
     def list(self, request):
-        programmes = Programme.to_dict()
+        programmes = Programme.objects.all()
         axes = Axis.objects.all()
-        programmes_result = {}
-        for programme_key in programmes:
-            axes_result = {}
-            prog_name = f'{programme_key}.{programmes[programme_key]}'
-            programmes_result[prog_name] = axes_result
-            for axis in axes:
-                print(axis.get_programme_display())
-                if axis.get_programme_display() == programmes[programme_key]:
-                    programmes_result[prog_name].update(
-                        {str(axis): [str(m) for m in axis.measures.all()]})
-
-        return Response(programmes_result)
+        if programmes:
+            programmes_result = {}
+            for programme in programmes:
+                axes_result = {}
+                prog_name = f'{programme.code}.{programme.name}'
+                programmes_result[prog_name] = axes_result
+                for axis in axes:
+                    if axis.prog == programme:
+                        programmes_result[prog_name].update(
+                            {str(axis): [str(m) for m in axis.measures.all()]})
+            return Response(programmes_result)
+        return Response('Brak poziomów wdrazania')

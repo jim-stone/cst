@@ -1,9 +1,20 @@
 from rest_framework import serializers
-from .models import (
-    Axis,
-    Institution,
-    Measure
-)
+from .models import (Axis, Measure, Programme, Pwd
+                     )
+
+
+class PwdSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Pwd
+        fields = '__all__'
+
+
+class ProgrammeSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Programme
+        fields = '__all__'
 
 
 class MeasureSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,11 +29,4 @@ class AxisSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Axis
-        fields = '__all__'
-
-
-class InstitutionSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Institution
         fields = '__all__'

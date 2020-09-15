@@ -6,13 +6,17 @@ from dictionaries import apis as dict_api
 from users import apis as users_api
 
 router = DefaultRouter()
-router.register(r'institutions', dict_api.InstitutionViewset)
 router.register(r'axes', dict_api.AxisViewset)
 router.register(r'measures', dict_api.MeasuresViewset)
-router.register(r'pwds', dict_api.ListPWDViewset, basename='pwds')
-router.register(r'programmes', dict_api.ProgrammeViewset,
-                basename='programmes')
+router.register(r'pwd_tree', dict_api.ListPWDViewset, basename='pwd_tree')
+router.register(r'pwds', dict_api.PwdViewset)
+router.register(r'programmes', dict_api.ProgrammeViewset)
 router.register(r'users', users_api.UserViewset)
+router.register(r'institutional_roles', users_api.InstitutionalRoleViewset)
+router.register(r'subjects', users_api.SubjectViewset, basename='subject')
+router.register(r'organisations', users_api.OrganisationViewset)
+router.register(r'persons', users_api.PersonViewset)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

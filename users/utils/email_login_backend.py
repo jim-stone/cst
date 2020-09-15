@@ -1,12 +1,10 @@
 from django.contrib.auth.backends import BaseBackend
 from users.models import CstUser as User
-#  from django.contrib.auth.models import User
 
 
 class EmailLoginBackend(BaseBackend):
 
     def authenticate(self, request, username=None, password=None, **kwargs):
-        print('authenticating...')
         try:
             user = User.objects.get(email=username)
         except User.DoesNotExist:

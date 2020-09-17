@@ -49,7 +49,8 @@ class Organisation(Subject):
 class InstitutionalRole (models.Model):
     maintype = models.CharField(
         max_length=4, choices=InstitutionType.to_tuple())
-    pwds = models.ManyToManyField(to=Pwd, related_name='i_roles')
-    subject = models.ForeignKey(to=Subject, related_name='i_roles',
-                                on_delete=models.CASCADE)
-    subject_role_pwd_id = models.CharField(max_length=4, default='9999')
+    pwd = models.ForeignKey(
+        to=Pwd, related_name='i_roles', on_delete=models.CASCADE)
+    subject = models.ForeignKey(
+        to=Subject, related_name='i_roles', on_delete=models.CASCADE)
+    subject_role_pwd_id = models.CharField(max_length=10, default='9999')

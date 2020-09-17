@@ -8,7 +8,16 @@ class Dictionary(models.Model):
 
 
 class Pwd(Dictionary):
-    pass
+
+    def __str__(self):
+        try:
+            p = self.programme
+        except Programme.DoesNotExist:
+            try:
+                p = self.axis
+            except Axis.DoesNotExist:
+                p = self.measure
+        return str(p)
 
 
 class Programme(Pwd):

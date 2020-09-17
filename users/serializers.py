@@ -26,7 +26,6 @@ class OrganisationSerializer(serializers.HyperlinkedModelSerializer):
 class SubjectSerializer(serializers.HyperlinkedModelSerializer):
     persons = PersonSerializer(many=True, read_only=True)
     organisations = OrganisationSerializer(many=True, read_only=True)
-    # managing_person = UserSerializer()
 
     class Meta:
         model = Subject
@@ -38,7 +37,12 @@ class InstitutionalRoleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = InstitutionalRole
         fields = '__all__'
-        validators = [serializers.UniqueTogetherValidator(
-            queryset=InstitutionalRole.objects.all(),
-            fields=['subject_role_pwd_id', 'pwds_id', 'subject_id']
-        )]
+        validators = [
+            serializers.UniqueTogetherValidator(
+                queryset=InstitutionalRole.objects.all(),
+                fields=['subject_role_pwd_id', 'pwd', 'subject']),
+            serializers.UniqueTogetherValidator(
+                queryset=InstitutionalRole.objects.all(),
+                fields=['maintype', 'pwd', 'subject']
+            )
+        ]

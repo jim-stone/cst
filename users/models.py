@@ -49,13 +49,7 @@ class Organisation(Subject):
 class InstitutionalRole (models.Model):
     maintype = models.CharField(
         max_length=4, choices=InstitutionType.to_tuple())
-    pwds = models.ManyToManyField(to=Subject, related_name='pwd_roles')
-    subject = models.ForeignKey(to=Subject, related_name='subject_roles',
+    pwds = models.ManyToManyField(to=Pwd, related_name='i_roles')
+    subject = models.ForeignKey(to=Subject, related_name='i_roles',
                                 on_delete=models.CASCADE)
     subject_role_pwd_id = models.CharField(max_length=4, default='9999')
-
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(fields=['subject_role_pwd_id', 'pwd', 'subject_id'],
-    #                                 name='unique_id_for_subject_in_pwd')
-    #     ]

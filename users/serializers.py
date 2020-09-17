@@ -34,9 +34,11 @@ class SubjectSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class InstitutionalRoleSerializer(serializers.HyperlinkedModelSerializer):
-    # pwd = PwdSerializer()
-    # org = OrganisationSerializer()
 
     class Meta:
         model = InstitutionalRole
         fields = '__all__'
+        validators = [serializers.UniqueTogetherValidator(
+            queryset=InstitutionalRole.objects.all(),
+            fields=['subject_role_pwd_id', 'pwds_id', 'subject_id']
+        )]

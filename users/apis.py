@@ -1,6 +1,7 @@
 from itertools import chain
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions, mixins, viewsets
 from .serializers import (
     UserSerializer, InstitutionalRoleSerializer,
@@ -41,16 +42,23 @@ class SubjectViewset(viewsets.ViewSet):
     permission_classes = [permissions.IsAdminUser]
 
     def list(self, request):
-        persons = [PersonSerializer(
-            instance=p, context={'request': request}).data for p in Person.objects.all()]
-        organisations = [OrganisationSerializer(
-            instance=o, context={'request': request}).data for o in Organisation.objects.all()]
-        queryset = list(chain(persons, organisations))
-
+        persons = PersonSerializer(
+            Person.objects.all(), many=True, context={'request': request})
+        organisations = OrganisationSerializer(
+            Organisation.objects.all(), many=True, context={'request': request})
+        queryset = list(chain(persons.data, organisations.data))
         return Response(queryset)
 
     def retrieve(self, request, pk=None):
-        queryset = Subject.objects.all()
-        subject = get_object_or_404(queryset, pk=pk)
-        serializer = SubjectSerializer(subject)
+        serializer_class = OrganisationSerializer
+
+        try:
+            subject = Organisation.objects.get(subject_ptr_id=pk)
+        except ObjectDoesNotExist:
+            queryset = Person.objects.all()
+            serializer_class = PersonSerializer
+            subject = get_object_or_404(queryset, subject_ptr_id=pk)
+
+        serializer = serializer_class(
+            subject, context={'request': request})
         return Response(serializer.data)

@@ -2,9 +2,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from dictionaries.models import Pwd
 from .enumerations import InstitutionType
+from helpers.models import BusinessObject
 
 
-class CstUser(AbstractUser):
+class CstUser(AbstractUser, BusinessObject):
     def __str__(self):
         return f'Użytkownik CST {self.username} {self.email}'
 

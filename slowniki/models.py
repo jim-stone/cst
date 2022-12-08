@@ -1,5 +1,17 @@
 from django.db import models
-from helpers.models import BusinessObject
+
+
+class BusinessObject(models.Model):
+    createdAt = models.DateTimeField(auto_now_add=True)
+    modifiedAt = models.DateTimeField(auto_now=True)
+    createdBy = models.CharField(max_length=200)
+    modifiedBy = models.CharField(max_length=200)
+    deletedBy = models.CharField(max_length=200, null=True)
+    deletedAt = models.DateTimeField(null=True)
+
+    class Meta:
+        abstract = True
+        ordering = ('-modifiedAt',)
 
 
 class Dictionary(BusinessObject, models.Model):
@@ -10,6 +22,16 @@ class Dictionary(BusinessObject, models.Model):
 
     def __str__(self):
         return self.name
+
+
+class DictionaryHistory(models.Model):
+    record_id = models.IntegerField()
+    field = models.CharField(max_length=200)
+    prev_value = models.Field()
+    next_value = models.Field()
+    deleted = models.BooleanField()
+    user_edited = models.CharField(max_length=200)
+    date_edited = models.DateTimeField(auto_now=True)
 
 
 class EntryFieldSpecification(BusinessObject, models.Model):
@@ -46,3 +68,5 @@ class DictionaryValues (BusinessObject, models.Model):
         DictionaryEntry, related_name='field_values', on_delete=models.CASCADE)
     referencedValue = models.ForeignKey(
         'DictionaryValues', on_delete=models.PROTECT, null=True)
+
+

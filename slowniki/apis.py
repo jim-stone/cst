@@ -32,11 +32,11 @@ class DictionaryCreateApi (ModelViewSet):
     class InputSerializer(serializers.HyperlinkedModelSerializer):
         class Meta:
             model = Dictionary
-            fields = ['name', 'isHorizontal', 'isModifiable', 'isExtensible']
+            fields = ['id', 'name', 'isHorizontal', 'isModifiable', 'isExtensible']
 
     serializer_class = InputSerializer
     queryset = Dictionary.objects.all()
-    allowed_methods = ['POST']
+    allowed_methods = ['GET', 'POST', 'DELETE']
 
     def create(self, request):
         creator = request.user.username

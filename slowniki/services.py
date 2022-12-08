@@ -1,4 +1,3 @@
-from django.db.models import Model
 from slowniki.models import Dictionary, EntryFieldSpecification
 
 
